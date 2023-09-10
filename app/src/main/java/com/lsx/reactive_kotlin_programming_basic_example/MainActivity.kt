@@ -17,6 +17,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.lsx.reactive_kotlin_programming_basic_example.ui.theme.ReactivekotlinprogrammingbasicexampleTheme
+import io.reactivex.rxkotlin.Observables
 import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.rxkotlin.toObservable
 
@@ -34,12 +35,9 @@ class MainActivity : ComponentActivity() {
     }
 
     private fun startStream() {
-        var list = listOf<Int>(1, 2, 3, 4, 5)
-        list.toObservable()
-            .subscribeBy(
-                onNext = { println(it) },
-                onError = { it.printStackTrace() },
-                onComplete = { println("onComplete") }
-            )
+        val numbers = Observable.range(1, 6)
+        val strings = Observable.just("one", "two", "three", "four", "five", "six")
+        var zipped = Observables.zip(numbers, strings)
+        zipped.subscribe(::println)
     }
 }
