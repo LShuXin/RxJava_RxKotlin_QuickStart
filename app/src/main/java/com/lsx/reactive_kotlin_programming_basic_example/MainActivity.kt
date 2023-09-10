@@ -17,6 +17,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.lsx.reactive_kotlin_programming_basic_example.ui.theme.ReactivekotlinprogrammingbasicexampleTheme
+import io.reactivex.rxkotlin.subscribeBy
+import io.reactivex.rxkotlin.toObservable
 
 class MainActivity : ComponentActivity() {
     private val TAG: String = "MainActivity"
@@ -32,30 +34,12 @@ class MainActivity : ComponentActivity() {
     }
 
     private fun startStream() {
-        val myObserver = getObserver()
-        val myObservable = getObservable()
-        myObservable.safeSubscribe(myObserver)
-    }
-
-    private fun getObserver(): Observer<String> {
-        return object: Observer<String> {
-            override fun onSubscribe(d: Disposable) {
-                Log.d(TAG, "onSubscribe")
-            }
-            override fun onNext(t: String) {
-                Log.d(TAG, "onNext: $t")
-            }
-
-            override fun onError(e: Throwable) {
-                Log.e(TAG, "onError:" + e.message)
-            }
-            override fun onComplete() {
-                Log.d(TAG, "onComplete")
-            }
-        }
-    }
-
-    private fun getObservable(): Observable<String> {
-        return Observable.just("1", "2", "3", "4", "5")
+        var list = listOf<Int>(1, 2, 3, 4, 5)
+        list.toObservable()
+            .subscribeBy(
+                onNext = { println(it) },
+                onError = { it.printStackTrace() },
+                onComplete = { println("onComplete") }
+            )
     }
 }
